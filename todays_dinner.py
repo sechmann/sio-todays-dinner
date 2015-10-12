@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import requests
 
 todays_dinner_url = 'https://beta.sio.no/mat-og-drikke/_window/mat+og+drikke+-+dagens+middag?s={}'
-cafeterias = {
+cafeteria_ids = {
         'informatikk': 284,
         'frederikke': 122,
         'kutt': 310
@@ -23,20 +23,19 @@ def todays_dinner_to_dict(text, own_url):
     todays_dinner = {}
     for h, p in zip(headers, paragraphs):
         todays_dinner[h.contents[0].lower()] = [span.contents[0] for span in p.find_all('span')]
-    todays_dinner['cafeterias'] = ['{}/{}'.format(own_url[:own_url.rfind('/')], cafeteria) for cafeteria in cafeterias.keys()]
 
-    print("HER {}".format(todays_dinner))
+    todays_dinner['cafeterias'] = ['{}/{}'.format(own_url[:own_url.rfind('/')], cafeteria) for cafeteria in cafeteria_ids.keys()]
+
     return todays_dinner
 
 @app.route('/todays_dinner/', methods=['GET'])
 @app.route('/todays_dinner/<cafeteria>', methods=['GET'])
 def get_todays_dinner(cafeteria='informatikk'):
-    if not cafeteria in cafeterias.keys():
+    if not cafeteria in cafeteria_ids.keys():
         cafeteria = 'informatikk'
 
-    print(todays_dinner_url.format(cafeterias[cafeteria]))
-    todays_dinner_html = requests.get(todays_dinner_url.format(cafeterias[cafeteria])).text
+    todays_dinner_html = requests.get(todays_dinner_url.format(cafeteria_ids[cafeteria])).text
     return jsonify(todays_dinner_to_dict(todays_dinner_html, request.base_url))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=False)
