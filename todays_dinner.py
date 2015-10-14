@@ -12,19 +12,17 @@ cafeteria_ids = {
 
 app = Flask(__name__)
 
-def todays_dinner_to_dict(text, own_url):
-    soup = BeautifulSoup(text, 'html.parser')
+def todays_dinner_to_dict(html, own_url):
+    soup = BeautifulSoup(html, 'html.parser')
     headers = soup.find_all('h3')
     paragraphs = soup.find_all('p')
 
     if len(headers) != len(paragraphs):
         return {error: "Number of headers does not correspond to the number of paragraphs."}
     
-    todays_dinner = {}
+    todays_dinner = {"dishes": [], "cafeterias": ['{}/{}'.format(own_url[:own_url.rfind('/')], cafeteria) for cafeteria in cafeteria_ids.keys()]}
     for h, p in zip(headers, paragraphs):
-        todays_dinner[h.contents[0].lower()] = [span.contents[0] for span in p.find_all('span')]
-
-    todays_dinner['cafeterias'] = ['{}/{}'.format(own_url[:own_url.rfind('/')], cafeteria) for cafeteria in cafeteria_ids.keys()]
+        todays_dinner["dishes"] += [{"category": h.contents[0].lower(), "dish": [span.contents[0] for span in p.find_all('span')]}]
 
     return todays_dinner
 
@@ -38,4 +36,4 @@ def get_todays_dinner(cafeteria='informatikk'):
     return jsonify(todays_dinner_to_dict(todays_dinner_html, request.base_url))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=False)
+    app.run(host='0.0.0.0', debug=True)
