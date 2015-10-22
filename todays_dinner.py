@@ -2,17 +2,14 @@
 from flask import Flask, jsonify, request
 from werkzeug.contrib.cache import SimpleCache
 from bs4 import BeautifulSoup
-import requests, os, time
+import requests, os, time, json
 
 todays_dinner_url = 'https://beta.sio.no/mat-og-drikke/_window/mat+og+drikke+-+dagens+middag?s={}'
 
 # Static things
-cafeteria_ids = {
-        'informatikk': 284,
-        'frederikke': 122,
-        'kutt': 310
-        }
+cafeteria_ids = {}
 api_url = 'http://api.desperate.solutions/dagens/'
+api_urls = {}
 cache = SimpleCache()
 
 app = Flask(__name__)
@@ -57,7 +54,10 @@ def get_todays_dinner(cafeteria=None):
     if cafeteria in cafeteria_ids.keys():
         return jsonify({'cafeteria': get_dishes(cafeteria)})
     else:
-        return jsonify(make_urls())
+        return jsonify(api_urls)
 
 if __name__ == '__main__':
+    with open('cafeterias.json') as f:
+        cafeteria_ids = json.load(f)
+    api_urls = make_urls()
     app.run(host='0.0.0.0', port=5000, debug=True)
