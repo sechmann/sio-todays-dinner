@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, g
 from werkzeug.contrib.cache import SimpleCache
 from bs4 import BeautifulSoup
 import requests, os, time, json
 
-todays_dinner_url = 'https://beta.sio.no/mat-og-drikke/_window/mat+og+drikke+-+dagens+middag?s={}'
-
 # Static things
+todays_dinner_url = 'https://beta.sio.no/mat-og-drikke/_window/mat+og+drikke+-+dagens+middag?s={}'
 cafeteria_ids = {}
 api_url = 'http://api.desperate.solutions/dagens/'
 api_urls = {}
