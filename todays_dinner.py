@@ -77,4 +77,4 @@ if __name__ == '__main__':
     with open('cafeterias.json') as f:
         cafeteria_ids = json.load(f)
     api_urls = make_urls()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
