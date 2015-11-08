@@ -10,7 +10,7 @@ api_base_urls = {cafeteria:
 '{}/{}'.format(api_base_url[:api_base_url.rfind('/')], cafeteria) for cafeteria in todays_dinner.cafeteria_ids.keys()}
 
 app = Flask(__name__)
-@app.route('/todays_dinner/<cafeteria>/flush', methods=['GET'])
+@app.route('/dagens/<cafeteria>/flush', methods=['GET'])
 def flush_cache(cafeteria=None):
     if not cafeteria:
         return jsonify({error: "Invalid or no cafeteria specified"})
@@ -18,8 +18,8 @@ def flush_cache(cafeteria=None):
         todays_dinner.flush_cache(cafeteria)
         return get_todays_dinner(cafeteria)
 
-@app.route('/todays_dinner/', methods=['GET'])
-@app.route('/todays_dinner/<cafeteria>', methods=['GET'])
+@app.route('/dagens/', methods=['GET'])
+@app.route('/dagens/<cafeteria>', methods=['GET'])
 def get_todays_dinner(cafeteria=None):
     cafeterias = {}
 
