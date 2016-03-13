@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests, os, time, json, memcache
 
-TODAYS_DINNER_URL = 'https://beta.sio.no/mat-og-drikke/_window/mat+og+drikke+-+dagens+middag?s={}'
+TODAYS_DINNER_URL = 'https://sio.no/mat-og-drikke/_window/mat+og+drikke+-+dagens+middag?s={}'
 
 class Menu:
     def __init__(self):
